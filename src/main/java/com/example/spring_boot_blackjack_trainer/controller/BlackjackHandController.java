@@ -1,7 +1,7 @@
 package com.example.spring_boot_blackjack_trainer.controller;
 
-import com.bilalamiry.training_simulator.model.BlackjackHand;
-import com.bilalamiry.training_simulator.service.BlackjackHandService;
+import com.example.spring_boot_blackjack_trainer.model.BlackjackHand;
+import com.example.spring_boot_blackjack_trainer.service.BlackjackHandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
