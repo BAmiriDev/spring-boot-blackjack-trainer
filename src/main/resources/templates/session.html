@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Blackjack Session</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="table-container">
+    <div class="table-background">
+
+        <!-- Finish Session Button -->
+        <div style="position: absolute; top: 20px; right: 20px;">
+            <a th:href="@{'/web/session/' + ${sessionId} + '/summary'}" class="finish-session-button">Finish Session</a>
+        </div>
+
+        <div class="game-content">
+
+            <!-- Dealer Cards -->
+            <p style="color: white; text-align: center; margin-bottom: 5px;"><strong>Dealer Cards:</strong></p>
+            <div class="dealer-area">
+                <img th:each="card : ${dealerCards}"
+                     th:src="@{'/cards/' + ${card} + '.png'}"
+                     alt="Card">
+            </div>
+
+            <!-- Player Cards -->
+            <p style="color: white; text-align: center; margin-bottom: 5px;"><strong>Your Hand:</strong></p>
+
+            <!-- Single Hand View -->
+            <div class="player-area" th:if="${playerCards2 == null}">
+                <img th:each="card : ${playerCards1}"
+                     th:src="@{'/cards/' + ${card} + '.png'}"
+                     alt="Card">
+            </div>
+
+            <!-- Split Hands View -->
+            <div th:if="${playerCards2 != null}">
+                <p style="color: white; text-align: center; margin-bottom: 5px;">
+                    <strong>Playing Hand <span th:text="${activeHand}"></span> of 2:</strong>
+                </p>
+                <div style="display: flex; justify-content: center; gap: 40px;">
+                    <div class="player-area" style="border: 3px solid" th:styleappend="${activeHand == 1} ? 'lime' : 'transparent'">
+                        <img th:each="card : ${playerCards1}"
+                             th:src="@{'/cards/' + ${card} + '.png'}"
+                             alt="Card">
+                    </div>
+                    <div class="player-area" style="border: 3px solid" th:styleappend="${activeHand == 2} ? 'lime' : 'transparent'">
+                        <img th:each="card : ${playerCards2}"
+                             th:src="@{'/cards/' + ${card} + '.png'}"
+                             alt="Card">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback Message -->
+            <p th:if="${feedback != null}" th:text="${feedback}" class="feedback" style="margin: 8px 0;"></p>
+
+            <!-- Action Buttons -->
+            <form th:action="@{/web/session/{id}/play(id=${sessionId})}" method="post" th:if="${ongoing}">
+                <div th:each="card : ${playerCards1}">
+                    <input type="hidden" name="playerCards1" th:value="${card}" />
+                </div>
+                <div th:if="${playerCards2 != null}" th:each="card : ${playerCards2}">
+                    <input type="hidden" name="playerCards2" th:value="${card}" />
+                </div>
+                <div th:each="card : ${dealerCards}">
+                    <input type="hidden" name="dealerCards" th:value="${card}" />
+                </div>
+                <input type="hidden" name="activeHand" th:value="${activeHand}" />
+                <input type="hidden" name="ongoing" th:value="${ongoing}" />
+
+                <div class="action-button-row">
+                    <button type="submit" name="playerMove" value="Hit">Hit</button>
+                    <button type="submit" name="playerMove" value="Stand">Stand</button>
+                    <button type="submit" name="playerMove" value="Double">Double</button>
+                    <button type="submit" name="playerMove" value="Split"
+                            th:disabled="${playerCards2 != null || playerCards1.size() != 2 || !canSplit}">
+                        Split
+                    </button>
+                </div>
+            </form>
+
+            <!-- Deal New Hand -->
+            <div th:if="${!ongoing}" style="text-align: center; margin-top: 5px;">
+                <p class="round-over" style="margin: 5px 0;">Round over. Deal a new hand to continue.</p>
+                <form th:action="@{/web/session/{id}/deal(id=${sessionId})}" method="get">
+                    <button type="submit">Deal New Hand</button>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
