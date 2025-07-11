@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Session Summary</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="table-container">
+    <div class="table-background">
+
+        <div class="summary-content">
+            <h2>Blackjack Training Summary</h2>
+
+            <p style="color:white; font-weight: bold; margin-top:10px;">
+                Username: <span th:text="${username}">User</span>
+            </p>
+
+            <div class="summary-grid">
+                <div class="summary-block correct-block">
+                    <div class="summary-value" th:text="${correct}">0</div>
+                    <div class="summary-label">Correct</div>
+                </div>
+                <div class="summary-block wrong-block">
+                    <div class="summary-value" th:text="${wrong}">0</div>
+                    <div class="summary-label">Wrong</div>
+                </div>
+                <div class="summary-block accuracy-block">
+                    <div class="summary-value" th:text="${accuracy} + '%'">0%</div>
+                    <div class="summary-label">Accuracy</div>
+                </div>
+                <div class="summary-block total-block">
+                    <div class="summary-value" th:text="${total}">0</div>
+                    <div class="summary-label">Hands Played</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 25px;">Start a New Training Session</h3>
+            <form th:action="@{/web/start}" method="post">
+                <input type="text" name="username" placeholder="Enter your name" required/>
+                <button type="submit">Start Training</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
