@@ -3,6 +3,7 @@ package com.example.spring_boot_blackjack_trainer.controller.web;
 import com.example.spring_boot_blackjack_trainer.model.TrainingSession;
 import com.example.spring_boot_blackjack_trainer.model.UserProfile;
 import com.example.spring_boot_blackjack_trainer.service.BlackjackHandService;
+import com.example.spring_boot_blackjack_trainer.service.DeckOfCardsService;
 import com.example.spring_boot_blackjack_trainer.service.TrainingSessionService;
 import com.example.spring_boot_blackjack_trainer.service.UserProfileService;
 import com.example.spring_boot_blackjack_trainer.util.HandGenerator;
@@ -28,6 +29,10 @@ public class WebController {
     @Autowired
     private BlackjackHandService handService;
 
+    @Autowired
+    private DeckOfCardsService cardApiService;
+
+
     @GetMapping
     public String home() {
         return "home";
@@ -39,6 +44,15 @@ public class WebController {
         TrainingSession session = sessionService.createSession(user.getId());
         sessionService.saveSession(session);
         return "redirect:/web/session/" + session.getId();
+    }
+
+    @GetMapping("/api-test")
+    @ResponseBody
+    public String testApiCardDraw() {
+        String deckId = cardApiService.createNewDeck();
+        String cardCode = cardApiService.drawCard(deckId);
+        return "Drew card: " + cardCode;
+
     }
 
     @GetMapping("/session/{id}")
